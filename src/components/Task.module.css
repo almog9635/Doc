@@ -1,0 +1,51 @@
+.button {
+    padding: 10px 15px;
+  background-color: #28a745;
+  color: #ffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem; 
+}
+
+
+
+li {
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+li span {
+  flex: 1;
+}
+
+li button {
+  margin-left: 10px;
+}
+
+li.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+li .delete-btn {
+  background-color: #dc3545;
+}
+
+li .delete-btn:hover {
+  background-color: #c82333;
+}
+
+li .toggle-btn {
+  background-color: #007bff;
+}
+
+li .toggle-btn:hover {
+  background-color: #0056b3;
+}

@@ -1,0 +1,50 @@
+.container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.userDetail {
+    margin-bottom: 10px;
+}
+
+.userDetail strong {
+    font-weight: 600;
+    color: #555;
+}
+
+.userDetail p {
+    font-size: 16px;
+    color: #777;
+}
+
+.roles {
+    margin-top: 20px;
+}
+
+.roles strong {
+    font-weight: 600;
+    color: #555;
+}
+
+.roles ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.roles li {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 5px;
+}
