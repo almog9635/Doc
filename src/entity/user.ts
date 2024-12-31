@@ -8,6 +8,6 @@ export interface User{
     lastName: string;
     serviceType: string;
     password: string;
-    roles: Set<Role>;
+    roles: Array<Role>;
     group: Group;
 }

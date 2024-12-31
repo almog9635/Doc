@@ -12,15 +12,14 @@ const UserView: React.FC = () => {
         axios.get(`http://localhost:4000/user/${id}`)
             .then(response => {
                 console.log('API response:', response.data);
-                console.log('API response type:', typeof response.data);
-                if (response.data && response.data.users) {
+                if (response.data) {
                     setUser(response.data.users);
                     console.log('User set:', response.data.users);
                 } else {
                     console.error('API response does not contain user data:', response.data);
                 }
             })
-            .catch(error => console.error(error));
+            .catch(error => console.error('Error fetching user:', error));
     }, [id]);
 
     if (!user) {
@@ -34,12 +33,12 @@ const UserView: React.FC = () => {
             <p><strong>Last Name:</strong> {user.lastName}</p>
             <p><strong>Service Type:</strong> {user.serviceType}</p>
             <p><strong>Password:</strong> {user.password}</p>
-            <p><strong>Group:</strong> {user.group.id}</p>
+            <p><strong>Group:</strong> {user.group.name}</p>
             <div>
                 <strong>Roles:</strong>
                 <ul>
                     {Array.isArray(user.roles) && user.roles.map(role => (
-                        <li key={role.id}>{role.name}</li>
+                        <li key={role.id}>{role.roleName}</li>
                     ))}
                 </ul>
             </div>
