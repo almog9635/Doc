@@ -3,14 +3,34 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { User } from '../../../entity/user.ts';
 import styles from './user.module.css';
+import TokenWrapper from '../../../components/wrapper/tokenWrapper.tsx';
+import { jwtDecode } from 'jwt-decode';
 
 const UserView: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [user, setUser] = React.useState<User | null>(null);
 
     React.useEffect(() => {
-        axios.get(`http://localhost:4000/user/${id}`)
-            .then(response => {
+        const fetchUser = async () => {
+            try {
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    console.error('No access token found');
+                    return;
+                }
+                const decodedToken = jwtDecode(token);
+                if(decodedToken.sub !== id){
+                    console.error('User not authorized to view this page');
+                    return;
+                }
+
+                const response = await axios.get(`http://localhost:4000/user/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
                 console.log('API response:', response.data);
                 if (response.data) {
                     setUser(response.data.users);
@@ -18,8 +38,12 @@ const UserView: React.FC = () => {
                 } else {
                     console.error('API response does not contain user data:', response.data);
                 }
-            })
-            .catch(error => console.error('Error fetching user:', error));
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+        };
+
+        fetchUser();
     }, [id]);
 
     if (!user) {
@@ -27,6 +51,7 @@ const UserView: React.FC = () => {
     }
 
     return (
+        <TokenWrapper>
         <div className={styles.container}>
             <h1 className={styles.title}>User Details</h1>
             <p><strong>First Name:</strong> {user.firstName}</p>
@@ -43,6 +68,7 @@ const UserView: React.FC = () => {
                 </ul>
             </div>
         </div>
+        </TokenWrapper>
     );
 };
 

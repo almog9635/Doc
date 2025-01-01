@@ -10,6 +10,7 @@ const Users: React.FC = () => {
     const [filters, setFilters] = useState<{ [key: string]: string }>({});
     const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
+    /* implement jwt here and check roles */
     useEffect(() => {
         axios.get('http://localhost:4000/users')
             .then(response => {
