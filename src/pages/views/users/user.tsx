@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { User } from '../../../entity/user.ts';
 import styles from './user.module.css';
-import TokenWrapper from '../../../components/wrapper/tokenWrapper.tsx';
 import { jwtDecode } from 'jwt-decode';
+import { DecodedToken } from '../../../entity/decodedToken.ts';
 
 const UserView: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -18,8 +18,8 @@ const UserView: React.FC = () => {
                     console.error('No access token found');
                     return;
                 }
-                const decodedToken = jwtDecode(token);
-                if(decodedToken.sub !== id){
+                const decodedToken = jwtDecode<DecodedToken>(token);
+                if(decodedToken.sub !== id && !decodedToken.roles.includes("admin")){
                     console.error('User not authorized to view this page');
                     return;
                 }
@@ -51,7 +51,6 @@ const UserView: React.FC = () => {
     }
 
     return (
-        <TokenWrapper>
         <div className={styles.container}>
             <h1 className={styles.title}>User Details</h1>
             <p><strong>First Name:</strong> {user.firstName}</p>
@@ -68,7 +67,6 @@ const UserView: React.FC = () => {
                 </ul>
             </div>
         </div>
-        </TokenWrapper>
     );
 };
 

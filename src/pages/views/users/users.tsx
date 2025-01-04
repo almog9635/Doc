@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import styles from './users.module.css';
 import axios from 'axios';
 import { User } from '../../../entity/user.ts';
+import { jwtDecode } from 'jwt-decode';
+import { DecodedToken } from '../../../entity/decodedToken.ts';
 
 const Users: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -10,23 +12,41 @@ const Users: React.FC = () => {
     const [filters, setFilters] = useState<{ [key: string]: string }>({});
     const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
-    /* implement jwt here and check roles */
     useEffect(() => {
-        axios.get('http://localhost:4000/users')
-            .then(response => {
+        const fetchUsers = async () => {
+            try{
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    console.error('No access token found');
+                    return;
+                }
+                const decodedToken = jwtDecode<DecodedToken>(token);
+
+                if(!decodedToken.roles.includes("admin")){
+                    console.error('User not authorized to view this page');
+                    return;
+                }
+
+                const response = await axios.get('http://localhost:4000/users',{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
                 console.log('API response:', response.data);
-                console.log('API response type:', typeof response.data);
-                // Extract users from the "getAllUsers" key
-                if (response.data?.getAllUsers && Array.isArray(response.data.getAllUsers)) {
+                if (response.data?.getAllUsers && Array.isArray(response.data.getAllUsers)){
                     setUsers(response.data.getAllUsers);
                     setFilteredUsers(response.data.getAllUsers);
-                    console.log('Users:', response.data.getAllUsers);
-                } else {
+                } else{
                     console.error('API response does not contain valid "getAllUsers" key:', response.data);
                 }
-            })
-            .catch(error => console.error(error));
-    }, []);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    fetchUsers();
+}, []);
 
     useEffect(() => {
         setFilteredUsers(

@@ -2,11 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './sideProfile.module.css';
 import {jwtDecode} from 'jwt-decode';
-
-interface DecodedToken {
-    name: string;
-    sub: string;
-}
+import { DecodedToken } from '../../entity/decodedToken';
 
 const SideProfile: React.FC = () => {
     const [userName, setUserName] = React.useState<string | null>(null);
