@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './users.module.css';
 import axios from 'axios';
 import { User } from '../../../entity/user.ts';
@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { DecodedToken } from '../../../entity/decodedToken.ts';
 
 const Users: React.FC = () => {
+    const navigate = useNavigate();
     const [users, setUsers] = useState<User[]>([]);
     const [filterCategory, setFilterCategory] = useState<string>('firstName');
     const [filters, setFilters] = useState<{ [key: string]: string }>({});
@@ -23,7 +24,7 @@ const Users: React.FC = () => {
                 const decodedToken = jwtDecode<DecodedToken>(token);
 
                 if(!decodedToken.roles.includes("admin")){
-                    console.error('User not authorized to view this page');
+                    navigate('/home');
                     return;
                 }
 

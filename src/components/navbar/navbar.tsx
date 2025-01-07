@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './navbar.module.css';
 import SideProfile from '../sideprofile/sideProfile';
 import LogoutButton from '../logout/logout';
+import { jwtDecode } from 'jwt-decode';
+import { DecodedToken } from '../../entity/decodedToken';
 
 const Navbar: React.FC = () => {
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            const decoded = jwtDecode<DecodedToken>(token);
+            if (decoded.roles && decoded.roles.includes('admin')) {
+                setIsAdmin(true);
+            }
+        }
+    }, []);
+
     return (
         <nav className={styles.navbar}>
             <SideProfile />
             <ul className={styles.navList}>
                 <li className={styles.navItem}><Link to="/home" className={styles.navLink}>Home</Link></li>
-                <li className={styles.navItem}><Link to="/users" className={styles.navLink}>Users</Link></li>
+                {isAdmin && (
+                    <>
+                        <li className={styles.navItem}><Link to="/users" className={styles.navLink}>Users</Link></li>
+                        <li className={styles.navItem}><Link to="/createUser" className={styles.navLink}>Add User</Link></li>
+                    </>
+                )}
             </ul>
             <div className={styles.navbarRight}>
                 <LogoutButton />

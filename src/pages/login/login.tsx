@@ -20,7 +20,6 @@ export default function Login() {
         .then(response => {
             if (response.data) {
                 console.log('Login successful:', response.data);
-                // save tokens in local storage
                 localStorage.setItem('accessToken', response.data.access);
                 localStorage.setItem('refreshToken', response.data.refresh);
                 navigate('/home');

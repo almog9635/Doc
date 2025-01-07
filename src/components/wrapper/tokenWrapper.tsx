@@ -34,10 +34,11 @@ const TokenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             }
             
             if(accessToken && !isAccessTokenValid(accessToken)) {
-                if (refreshToken) {
+                if (refreshToken && isAccessTokenValid(refreshToken)) {
                     try {
                         const refreshResponse = await axios.post('http://localhost:4000/refresh-token', { refreshToken }, {
                             headers: {
+                                'Authorization' : `Bearer ${refreshToken}`,
                                 'Content-Type': 'application/json',
                             }
                         });
