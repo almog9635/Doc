@@ -16,7 +16,7 @@ const LogoutButton: React.FC = () => {
             }
         })
         .then(response => {
-            if (response.data.success) {
+            if (response.status === 200) {
                 console.log('Logout successful');
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('refreshToken');

@@ -28,6 +28,10 @@ const Navbar: React.FC = () => {
                     <>
                         <li className={styles.navItem}><Link to="/users" className={styles.navLink}>Users</Link></li>
                         <li className={styles.navItem}><Link to="/createUser" className={styles.navLink}>Add User</Link></li>
+                        <li className={styles.navItem}><Link to="/deleteUser" className={styles.navLink}>Delete User</Link></li>
+                        <li className={styles.navItem}><Link to="/groups" className={styles.navLink}>Groups</Link></li>
+                        <li className={styles.navItem}><Link to="/createGroup" className={styles.navLink}>Create Group</Link></li>
+                        <li className={styles.navItem}><Link to="/deleteGroup" className={styles.navLink}>Delete Group</Link></li>
                     </>
                 )}
             </ul>

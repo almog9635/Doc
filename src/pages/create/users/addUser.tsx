@@ -6,18 +6,20 @@ import axios from 'axios';
 import { Role } from '../../../entity/role';
 import { Group } from '../../../entity/group';
 import { DecodedToken } from '../../../entity/decodedToken';
+import { ServiceType, Rank } from '../../../consts';
 
 const AddUser: React.FC = () => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [serviceType, setServiceType] = useState('');
   const [password, setPassword] = useState('');
   const [roles, setRoles] = useState<Role[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<string>('');
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+  const [serviceType, setServiceType] = useState<ServiceType | ''>('');
+  const [rank, setRank] = useState<Rank | ''>('');
 
   useEffect(() => {
     // Check for "Admin" role
@@ -74,15 +76,15 @@ const AddUser: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Map selected role names to Role objects
       const selectedRoleObjects = roles.filter(role => selectedRoles.includes(role.roleName));
       const selectedGroupObject = groups.find(group => group.name === selectedGroup);
     const token = localStorage.getItem('accessToken');
-    await axios.post('http://localhost:4000/createUser', {
+    await axios.post('http://localhost:4000/user/create', {
       firstName,
       lastName,
       serviceType,
       password,
+      rank,
       roles: selectedRoleObjects,
       group: selectedGroupObject,
     }, {
@@ -98,7 +100,7 @@ const AddUser: React.FC = () => {
   };
 
   if (!isAuthorized) {
-    return null; // or a loading spinner, or a message indicating that the user is not authorized
+    return null;
   }
 
   return (
@@ -127,14 +129,34 @@ const AddUser: React.FC = () => {
         </label>
         <label className={styles.label}>
           Service Type
-          <input
-            type="text"
+          <select
+            className={styles.select}
             value={serviceType}
-            onChange={(e) => setServiceType(e.target.value)}
-            className={styles.input}
+            onChange={(e) => setServiceType(e.target.value as ServiceType)}
             required
-          />
+          >
+            <option value="" disabled>Select service type</option>
+            {Object.values(ServiceType).map((type) => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
         </label>
+          
+        <label className={styles.label}>
+          Rank
+          <select
+            className={styles.select}
+            value={rank}
+            onChange={(e) => setRank(e.target.value as Rank)}
+            required
+          >
+            <option value="" disabled>Select rank</option>
+            {Object.values(Rank).map((r) => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </select>
+        </label>
+
         <label className={styles.label}>
           Password
           <input

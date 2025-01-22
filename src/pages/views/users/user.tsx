@@ -33,8 +33,8 @@ const UserView: React.FC = () => {
 
                 console.log('API response:', response.data);
                 if (response.data) {
-                    setUser(response.data.users);
-                    console.log('User set:', response.data.users);
+                    setUser(response.data.users[0]);
+                    console.log('User set:', user);
                 } else {
                     console.error('API response does not contain user data:', response.data);
                 }
@@ -57,6 +57,7 @@ const UserView: React.FC = () => {
             <p><strong>Last Name:</strong> {user.lastName}</p>
             <p><strong>Service Type:</strong> {user.serviceType}</p>
             <p><strong>Password:</strong> {user.password}</p>
+            <p><strong>rank: </strong>{user.rank}</p>
             <p><strong>Group:</strong> {user.group.name}</p>
             <div>
                 <strong>Roles:</strong>

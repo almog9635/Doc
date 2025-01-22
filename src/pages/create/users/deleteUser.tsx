@@ -35,7 +35,7 @@ const DeleteUser: React.FC = () => {
           'Content-Type': 'application/json',
         },
       });
-      setUser(response.data.users);
+      setUser(response.data.users[0]);
     } catch (error) {
       console.error('Error fetching user:', error);
     }

@@ -86,7 +86,7 @@ const DeleteGroup: React.FC = () => {
       {group && (
         <div className={styles.groupDetails}>
           <p><strong>Group Name:</strong> {group.name}</p>
-          <p><strong>Commander ID:</strong> {group.commander}</p>
+          <p><strong>Commander ID:</strong> {group.commander.id}</p>
           <button onClick={handleDelete} className={styles.deleteButton}>
             Delete Group
           </button>

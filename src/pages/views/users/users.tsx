@@ -43,6 +43,7 @@ const Users: React.FC = () => {
                 }
         } catch (error) {
             console.error('Error fetching users:', error);
+            navigate('/home');
         }
     };
 
@@ -103,6 +104,7 @@ const Users: React.FC = () => {
                             <p className={styles.userEmail}>{user.lastName}</p>
                             <p className={styles.userEmail}>{user.serviceType}</p>
                             <p className={styles.userEmail}>{user.password}</p>
+                            <p className={styles.userEmail}>{user.rank}</p>
                         </li>
                     </Link>
                 ))}

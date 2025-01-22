@@ -42,9 +42,9 @@ const AddGroup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:4000/createGroup', {
+      await axios.post('http://localhost:4000/group/create', {
         name,
-        commander: parseInt(commander, 10),
+        commander: commander ? parseInt(commander, 10) : null,
       });
       navigate('/groups');
     } catch (error) {
@@ -77,7 +77,6 @@ const AddGroup: React.FC = () => {
             value={commander}
             onChange={(e) => setCommander(e.target.value)}
             className={styles.input}
-            required
           />
         </label>
         <button type="submit" className={styles.submitButton}>

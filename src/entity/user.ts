@@ -6,6 +6,7 @@ export interface User{
     firstName: string;
     lastName: string;
     serviceType: string;
+    rank: string;
     password: string;
     roles: Array<Role>;
     group: Group;
