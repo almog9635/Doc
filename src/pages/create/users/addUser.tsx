@@ -76,24 +76,27 @@ const AddUser: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const selectedRoleObjects = roles.filter(role => selectedRoles.includes(role.roleName));
+      const selectedRoleObjects = roles.filter(role => selectedRoles.includes(role.name));
       const selectedGroupObject = groups.find(group => group.name === selectedGroup);
-    const token = localStorage.getItem('accessToken');
-    await axios.post('http://localhost:4000/user/create', {
-      firstName,
-      lastName,
-      serviceType,
-      password,
-      rank,
-      roles: selectedRoleObjects,
-      group: selectedGroupObject,
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-          navigate('/users');
+      const token = localStorage.getItem('accessToken');
+      const decoded = jwtDecode<DecodedToken>(token!);
+      
+      await axios.post('http://localhost:4000/user/create', {
+        firstName,
+        lastName,
+        serviceType,
+        password,
+        rank,
+        roles: selectedRoleObjects,
+        group: selectedGroupObject,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'User-Id': decoded.sub
+        }
+      });
+      navigate('/users');
     } catch (error) {
       console.error('Error creating user:', error);
     }
@@ -176,8 +179,8 @@ const AddUser: React.FC = () => {
             multiple
           >
             {roles.map((role) => (
-              <option key={role.id} value={role.roleName}>
-                {role.roleName}
+              <option key={role.id} value={role.name}>
+                {role.name}
               </option>
             ))}
           </select>

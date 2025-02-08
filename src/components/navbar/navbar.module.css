@@ -4,15 +4,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .navList {
     list-style: none;
     display: flex;
-    justify-content: center;
     margin: 0;
     padding: 0;
     flex: 1;
+    justify-content: center;
 }
 
 .navItem {
@@ -23,6 +24,7 @@
     color: white;
     text-decoration: none;
     font-size: 1.2rem;
+    transition: color 0.3s ease;
 }
 
 .navLink:hover {
@@ -32,4 +34,13 @@
 .navbarRight {
     display: flex;
     align-items: center;
+}
+
+@media (max-width: 768px) {
+    .navList {
+        flex-direction: column;
+    }
+    .navItem {
+        margin: 0.5rem 0;
+    }
 }

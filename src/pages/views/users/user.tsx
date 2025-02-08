@@ -6,6 +6,15 @@ import styles from './user.module.css';
 import { jwtDecode } from 'jwt-decode';
 import { DecodedToken } from '../../../entity/decodedToken.ts';
 
+interface RoleData {
+    id: string;
+    name: string;
+    role?: {
+        id: string;
+        name: string;
+    };
+}
+
 const UserView: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [user, setUser] = React.useState<User | null>(null);
@@ -34,7 +43,6 @@ const UserView: React.FC = () => {
                 console.log('API response:', response.data);
                 if (response.data) {
                     setUser(response.data.users[0]);
-                    console.log('User set:', user);
                 } else {
                     console.error('API response does not contain user data:', response.data);
                 }
@@ -62,9 +70,10 @@ const UserView: React.FC = () => {
             <div>
                 <strong>Roles:</strong>
                 <ul>
-                    {Array.isArray(user.roles) && user.roles.map(role => (
-                        <li key={role.id}>{role.roleName}</li>
-                    ))}
+                    {Array.isArray(user.roles) && user.roles.map((role: RoleData) => {
+                        const roleData = role.role ? role.role : role;
+                        return <li key={roleData.id}>{roleData.name}</li>;
+                    })}
                 </ul>
             </div>
         </div>

@@ -35,9 +35,14 @@ const DeleteUser: React.FC = () => {
           'Content-Type': 'application/json',
         },
       });
-      setUser(response.data.users[0]);
+      if (response.data.users.length > 0) {
+        setUser(response.data.users[0]);
+      } else {
+        setUser(null);
+      }
     } catch (error) {
       console.error('Error fetching user:', error);
+      setUser(null);
     }
   };
 
@@ -58,7 +63,9 @@ const DeleteUser: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchUser(userId);
+    if (userId.trim()) {
+      fetchUser(userId);
+    }
   };
 
   if (!isAuthorized) {
@@ -76,18 +83,25 @@ const DeleteUser: React.FC = () => {
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
             className={styles.input}
-            required
+            placeholder="Enter user ID (optional)"
           />
         </label>
-        <button type="submit" className={styles.submitButton}>
+        <button 
+          type="submit" 
+          className={styles.submitButton}
+          disabled={!userId.trim()}
+        >
           Fetch User
         </button>
       </form>
+      {userId.trim() && !user && (
+        <p className={styles.noUser}>No user found with the provided ID.</p>
+      )}
       {user && (
         <div className={styles.userDetails}>
           <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
           <p><strong>Service Type:</strong> {user.serviceType}</p>
-          <p><strong>Roles:</strong> {user.roles.map((r) => r.roleName).join(', ')}</p>
+          <p><strong>Roles:</strong> {user.roles.map((r) => r.name).join(', ')}</p>
           <p><strong>Group:</strong> {user.group?.name}</p>
           <button onClick={handleDelete} className={styles.deleteButton}>
             Delete User

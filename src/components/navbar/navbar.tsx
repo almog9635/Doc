@@ -23,15 +23,17 @@ const Navbar: React.FC = () => {
         <nav className={styles.navbar}>
             <SideProfile />
             <ul className={styles.navList}>
-                <li className={styles.navItem}><Link to="/home" className={styles.navLink}>Home</Link></li>
+                <li className={styles.navItem}>
+                    <Link to="/home" className={styles.navLink}>Home</Link>
+                </li>
                 {isAdmin && (
                     <>
-                        <li className={styles.navItem}><Link to="/users" className={styles.navLink}>Users</Link></li>
-                        <li className={styles.navItem}><Link to="/createUser" className={styles.navLink}>Add User</Link></li>
-                        <li className={styles.navItem}><Link to="/deleteUser" className={styles.navLink}>Delete User</Link></li>
-                        <li className={styles.navItem}><Link to="/groups" className={styles.navLink}>Groups</Link></li>
-                        <li className={styles.navItem}><Link to="/createGroup" className={styles.navLink}>Create Group</Link></li>
-                        <li className={styles.navItem}><Link to="/deleteGroup" className={styles.navLink}>Delete Group</Link></li>
+                        <li className={styles.navItem}>
+                            <Link to="/users" className={styles.navLink}>Users</Link>
+                        </li>
+                        <li className={styles.navItem}>
+                            <Link to="/groups" className={styles.navLink}>Groups</Link>
+                        </li>
                     </>
                 )}
             </ul>
