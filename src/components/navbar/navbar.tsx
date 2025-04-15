@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './navbar.module.css';
 import SideProfile from '../sideprofile/sideProfile';
-import LogoutButton from '../logout/logout';
+import LogoutButton from '../../pages/auth/logout/logout';
 import { jwtDecode } from 'jwt-decode';
 import { DecodedToken } from '../../entity/decodedToken';
 

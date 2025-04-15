@@ -1,0 +1,564 @@
+.debriefContainer {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  color: #333;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.debriefSection {
+  margin-bottom: 30px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+h2 {
+  color: #007bff;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+h3 {
+  color: #444;
+  margin: 15px 0;
+  font-size: 1.2rem;
+}
+
+h4 {
+  color: #555;
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.inputField, .textareaField, .selectField {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.textareaField {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.selectField {
+  width: 100%;
+  padding: 8px 12px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+label {
+  display: block;
+  margin: 10px 0;
+  font-weight: bold;
+  color: #555;
+}
+
+.addButton, .submitButton, .cancelButton {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.addButton {
+  background-color: #28a745;
+  color: white;
+  margin-right: 10px;
+  margin-left: 5px;
+}
+
+.addButton:hover {
+  background-color: #218838;
+}
+
+.submitButton {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+}
+
+.submitButton:hover {
+  background-color: #0069d9;
+}
+
+.cancelButton {
+  background-color: #6c757d;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+.formActions {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.contentForm, .taskForm, .lessonForm {
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+}
+
+.contentList, .taskList, .lessonList, .columnList, .commentList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.contentList li, .taskList li, .lessonList li, .columnList li, .commentList li {
+  background-color: #fff;
+  padding: 10px 15px;
+  margin: 5px 0;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.tablePreview {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #007bff;
+  color: white;
+}
+
+.cellInput {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+}
+
+.contentTypeIndicator {
+  font-size: 0.8em;
+  padding: 3px 8px;
+  border-radius: 12px;
+  margin-left: 10px;
+  background-color: #6c757d;
+  color: white;
+}
+
+.tableSection, .paragraphSection {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  border-left: 3px solid #007bff;
+}
+
+.columnForm, .commentForm {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.columnForm label, .commentForm label {
+  flex-grow: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .columnForm, .commentForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .addButton, .submitButton, .cancelButton {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .debriefContainer {
+    padding: 10px;
+  }
+}
+
+.contentListItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contentItemInfo {
+  flex-grow: 1;
+}
+
+.contentItemActions {
+  display: flex;
+  gap: 10px;
+}
+
+.editButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.editButton:hover {
+  background-color: #0069d9;
+}
+
+.editButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.updateButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.updateButton:hover {
+  background-color: #218838;
+}
+
+.cancelEditButton {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.cancelEditButton:hover {
+  background-color: #5a6268;
+}
+
+.editButtonGroup {
+  display: flex;
+  margin-top: 10px;
+}
+
+.columnListItem, .commentListItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.itemActions {
+  display: flex;
+  gap: 5px;
+}
+
+.smallButton, .smallEditButton, .smallDeleteButton, .smallCancelButton {
+  padding: 5px 10px;
+  font-size: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.smallButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.smallEditButton {
+  background-color: #007bff;
+  color: white;
+}
+
+.smallDeleteButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.smallCancelButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.columnEditForm, .commentEditForm {
+  display: flex;
+  flex-grow: 1;
+  gap: 5px;
+  align-items: center;
+}
+
+.columnEditForm input, .commentEditForm textarea {
+  flex-grow: 1;
+}
+
+.lessonListItem {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.lessonContent {
+  margin-bottom: 10px;
+}
+
+.lessonContent h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.lessonTasks {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.lessonTasks h5 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.lessonTaskList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.lessonTaskItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.taskDetails {
+  flex-grow: 1;
+}
+
+.taskDetails p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.lessonTaskForm {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  border-left: 3px solid #007bff;
+}
+
+.lessonTaskForm h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #007bff;
+}
+
+.lessonTaskFormButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.activeButton {
+  background-color: #007bff;
+}
+
+.lessonEditForm, .taskEditForm {
+  width: 100%;
+}
+
+.lessonEditForm textarea, .taskEditForm textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.lessonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.taskListItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.taskContent {
+  flex-grow: 1;
+}
+
+.taskContent p {
+  margin: 5px 0;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+input:required, 
+textarea:required {
+  border-left: 3px solid #007bff;
+}
+
+input:invalid, 
+textarea:invalid {
+  border-left: 3px solid #dc3545;
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: block;
+}
+
+.fieldRequired {
+  border-left: 3px solid #dc3545 !important;
+}
+
+input.fieldRequired,
+textarea.fieldRequired,
+select.fieldRequired {
+  background-color: #fff8f8;
+}
+
+.loadingSpinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.loadingSpinner::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.errorText {
+  color: #dc3545;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.noteText {
+  color: #6c757d;
+  font-size: 13px;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.retryContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.retryButton {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background-color: #5a6268;
+}
+
+.required {
+  color: #dc3545;
+  margin-left: 3px;
+}
+
+.taskLabel {
+  font-weight: 600;
+  color: #495057;
+}

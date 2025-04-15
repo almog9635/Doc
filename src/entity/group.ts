@@ -2,6 +2,6 @@ import { User } from "./user";
 
 export interface Group{
     id: string;
-    commander: User;
+    commander: User | null;
     name: string;
 }

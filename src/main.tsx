@@ -1,18 +1,21 @@
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Users from './pages/views/users/users.tsx';
-import UserView from './pages/views/users/user.tsx';
-import Login from './pages/login/login.tsx';
-import Home from './pages/home/home.tsx';
-import Logout from './components/logout/logout.tsx';
-import Layout from './components/layout.tsx';
-import AddUser from './pages/create/users/addUser.tsx';
-import AddGroup from './pages/create/groups/addGroup.tsx';
-import DeleteGroup from './pages/create/groups/deleteGroup.tsx';
-import DeleteUser from './pages/create/users/deleteUser.tsx';
-import Groups from './pages/views/groups/groups.tsx';
-import GroupPage from './pages/views/groups/group.tsx';
-
+import Users from './pages/user/list/users';
+import UserView from './pages/user/list/user';
+import Login from './pages/auth/login';
+import Home from './pages/home/home';
+import Logout from './pages/auth/logout/logout';
+import Layout from './components/layout';
+import AddUser from './pages/user/create/addUser';
+import AddGroup from './pages/group/create/addGroup';
+import DeleteGroup from './pages/group/delete/deleteGroup';
+import DeleteUser from './pages/user/delete/deleteUser';
+import Groups from './pages/group/list/groups';
+import GroupPage from './pages/group/list/group';
+import "./main.module.css";
+import DebriefForm from './pages/debrief/create/debrief';
+import Debriefs from './pages/debrief/view/debriefs';
+import DebriefView from './pages/debrief/view/debrief';
 createRoot(document.getElementById('root')!).render(
   <Router>
             <Routes>
@@ -28,6 +31,9 @@ createRoot(document.getElementById('root')!).render(
                 <Route path = "/createUser" element={<AddUser />} />
                 <Route path = "/groups" element={<Groups />} />
                 <Route path = "/group/:id" element={<GroupPage />} />
+                <Route path = "/createDebrief" element={<DebriefForm />} />
+                <Route path = "/debriefs" element={<Debriefs />} />
+                <Route path = "debrief/:id" element={<DebriefView />} />
                 </Route>
             </Routes>
         </Router>

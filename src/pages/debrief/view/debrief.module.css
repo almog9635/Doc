@@ -1,0 +1,377 @@
+.debriefContainer {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.debriefHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #e0e0e0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+}
+
+.editButton {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.editButton:hover {
+  background-color: #0069d9;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #007bff;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.errorContainer {
+  background-color: #fff3f3;
+  border-left: 4px solid #dc3545;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+
+.retryButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background-color: #c82333;
+}
+
+.debriefContent {
+  padding-bottom: 40px;
+}
+
+.debriefTitle {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.debriefMeta {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 30px 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.contentSubtitle {
+  font-size: 1.2rem;
+  color: #444;
+  margin: 20px 0 15px;
+}
+
+/* Paragraphs styling */
+.paragraphItem {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.paragraphTitle {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.commentsContainer {
+  margin-left: 20px;
+}
+
+.commentItem {
+  display: flex;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.commentBullet {
+  margin-right: 10px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.commentText {
+  flex: 1;
+}
+
+/* Tables styling */
+.tableContainer {
+  margin: 20px 0;
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background-color: white;
+}
+
+.tableHeader {
+  background-color: #f0f4f8;
+  color: #2c3e50;
+  font-weight: bold;
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+  position: sticky;
+  top: 0;
+}
+
+.tableRow {
+  border-bottom: 1px solid #eee;
+}
+
+.tableRow:nth-child(even) {
+  background-color: #f9fafc;
+}
+
+.tableRow:hover {
+  background-color: #f0f7ff;
+}
+
+.tableCell {
+  padding: 12px 15px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.tableTitle {
+  margin-bottom: 10px;
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.debugToggle {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 5px 10px;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #495057;
+  cursor: pointer;
+}
+
+.emptySection {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  text-align: center;
+  color: #6c757d;
+}
+
+/* Tasks styling */
+.tasksList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.taskItem {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.taskHeader {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.taskNumber {
+  margin-right: 10px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.taskContent {
+  font-weight: 500;
+  flex: 1;
+}
+
+.taskDetails {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+/* Lessons styling */
+.lessonsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lessonItem {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.lessonHeader {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.lessonNumber {
+  margin-right: 10px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.lessonContent {
+  font-weight: 500;
+  flex: 1;
+}
+
+.lessonTasks {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.lessonTasks h4 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #666;
+}
+
+.lessonTaskItem {
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.lessonTaskHeader {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.lessonTaskNumber {
+  margin-right: 10px;
+  color: #6c757d;
+  font-weight: bold;
+}
+
+.lessonTaskContent {
+  font-weight: 500;
+  flex: 1;
+}
+
+.lessonTaskDetails {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.emptyMessage {
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+  text-align: center;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .debriefMeta,
+  .taskDetails,
+  .lessonTaskDetails {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .tableContainer {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}

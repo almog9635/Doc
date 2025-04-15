@@ -1,5 +1,5 @@
 import { Group } from "./group";
-import { Role } from "./role";
+import { Role } from "./role/role";
 
 export interface User{
     id: string;

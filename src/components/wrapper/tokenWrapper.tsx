@@ -42,7 +42,6 @@ const TokenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                                 'Content-Type': 'application/json',
                             }
                         });
-
                         if (refreshResponse.data.success) {
                             localStorage.setItem('accessToken', refreshResponse.data.access);
                             localStorage.setItem('refreshToken', refreshResponse.data.refresh);
