@@ -1,140 +1,115 @@
 import { useState, useEffect } from 'react';
-import { Lesson } from '../../../../entity/debrief/lesson';
 import { ContentItem } from '../../../../entity/debrief/content/content-item';
 import { Task } from '../../../../entity/debrief/task';
+import { Lesson } from '../../../../entity/debrief/lesson';
+import { Paragraph } from '../../../../entity/debrief/content/paragraph/paragraph';
+import { Comment } from '../../../../entity/debrief/content/paragraph/comment'; // Import Comment
 
 interface FormData {
   title: string;
   debriefDate: string;
+  // Add mandatory section comments
+  backgroundComments: Comment[];
+  tripProgressComments: Comment[];
+  routeConsiderationsComments: Comment[];
+  // User-added content items
   contentItems: ContentItem[];
   tasks: Task[];
   lessons: Lesson[];
 }
 
+interface Errors {
+  title?: string;
+  debriefDate?: string;
+  // Add errors for mandatory sections
+  background?: string;
+  tripProgress?: string;
+  routeConsiderations?: string;
+  contentItems?: string;
+  tasks?: string;
+  lessons?: string;
+}
+
 export function useValidation(formData: FormData) {
-  const [errors, setErrors] = useState({
-    title: '',
-    debriefDate: '',
-    contentItems: '',
-    tasks: '',
-    lessons: ''
-  });
-  
-  // Initial validation
+  const [errors, setErrors] = useState<Errors>({});
+  const [isValid, setIsValid] = useState<boolean>(false);
+
   useEffect(() => {
-    const newErrors = {
-      title: '',
-      debriefDate: '',
-      contentItems: '',
-      tasks: '',
-      lessons: ''
-    };
-    
-    if (!formData.title.trim()) {
-      newErrors.title = 'Title is required';
-    }
-    
-    if (!formData.debriefDate) {
-      newErrors.debriefDate = 'Date and time are required';
-    }
-    
-    setErrors(newErrors);
-  }, [formData.title, formData.debriefDate]);
-  
-  const validateForm = () => {
-    const newErrors = {
-      title: '',
-      debriefDate: '',
-      contentItems: '',
-      tasks: '',
-      lessons: ''
-    };
-    
-    let isValid = true;
-    
-    if (!formData.title.trim()) {
-      newErrors.title = 'Title is required';
-      isValid = false;
-    }
-    
-    if (!formData.debriefDate) {
-      newErrors.debriefDate = 'Date and time are required';
-      isValid = false;
-    }
-    
-    if (formData.contentItems.length === 0) {
-      newErrors.contentItems = 'At least one content item is required';
-      isValid = false;
-    } else {
-      // Validate content items
+    const validate = () => {
+      const newErrors: Errors = {};
+      let currentIsValid = true;
+
+      // Validate title
+      if (!formData.title || formData.title.trim() === '') {
+        newErrors.title = 'Title is required';
+        currentIsValid = false;
+      }
+
+      // Validate debrief date
+      if (!formData.debriefDate) {
+        newErrors.debriefDate = 'Debrief date is required';
+        currentIsValid = false;
+      }
+
+      // Validate Mandatory Sections
+      if (!formData.backgroundComments || formData.backgroundComments.length === 0) {
+        newErrors.background = 'Background must have at least one point.';
+        currentIsValid = false;
+      }
+      if (!formData.tripProgressComments || formData.tripProgressComments.length === 0) {
+        newErrors.tripProgress = 'Trip Progress must have at least one point.';
+        currentIsValid = false;
+      }
+      if (!formData.routeConsiderationsComments || formData.routeConsiderationsComments.length === 0) {
+        newErrors.routeConsiderations = 'Route Considerations must have at least one point.';
+        currentIsValid = false;
+      }
+
+      // Validate user-added content items
       for (const item of formData.contentItems) {
         if (!item.name || item.name.trim() === '') {
-          newErrors.contentItems = 'All content items must have a name';
-          isValid = false;
+          newErrors.contentItems = 'All user-added content items must have a name';
+          currentIsValid = false;
           break;
         }
-        
-        if ('columns' in item && Array.isArray(item.columns)) {
-          // Table validation
-          if (item.columns.length === 0) {
-            newErrors.contentItems = 'Tables must have at least one column';
-            isValid = false;
-            break;
-          }
-        } else if ('comments' in item && Array.isArray(item.comments)) {
-          // Paragraph validation
-          if (item.comments.length === 0) {
-            newErrors.contentItems = 'Paragraphs must have at least one comment';
-            isValid = false;
-            break;
-          }
+
+        // Check user-added paragraphs for comments
+        if (item.type === 'paragraph') {
+           if (!(item as Paragraph).comments || (item as Paragraph).comments.length === 0) {
+             newErrors.contentItems = `Paragraph "${item.name}" must have at least one comment.`;
+             currentIsValid = false;
+             break;
+           }
         }
+        // Add validation for tables if needed (e.g., at least one column/row)
+        // else if (item.type === 'table') { ... }
       }
-    }
-    
-    if (formData.tasks.length === 0) {
-      newErrors.tasks = 'At least one task is required';
-      isValid = false;
-    } else {
-      // Validate tasks
+
+      // Validate tasks (example: content is required)
       for (const task of formData.tasks) {
         if (!task.content || task.content.trim() === '') {
           newErrors.tasks = 'All tasks must have content';
-          isValid = false;
+          currentIsValid = false;
           break;
         }
-        
-        if (!task.startDate) {
-          newErrors.tasks = 'All tasks must have a start date';
-          isValid = false;
-          break;
-        }
-        
-        if (!task.deadline) {
-          newErrors.tasks = 'All tasks must have a deadline';
-          isValid = false;
-          break;
-        }
+        // Add more task validations (dates, user assignment) if needed
       }
-    }
-    
-    if (formData.lessons.length === 0) {
-      newErrors.lessons = 'At least one lesson is required';
-      isValid = false;
-    } else {
-      // Validate lessons
+
+      // Validate lessons (example: content is required)
       for (const lesson of formData.lessons) {
         if (!lesson.content || lesson.content.trim() === '') {
           newErrors.lessons = 'All lessons must have content';
-          isValid = false;
+          currentIsValid = false;
           break;
         }
       }
-    }
-    
-    setErrors(newErrors);
-    return isValid;
-  };
-  
-  return { errors, validateForm };
+
+      setErrors(newErrors);
+      setIsValid(currentIsValid);
+    };
+
+    validate();
+  }, [JSON.stringify(formData)]); // Re-validate only when formData content changes
+
+  return { errors, isValid };
 }

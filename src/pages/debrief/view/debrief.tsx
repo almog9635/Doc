@@ -36,6 +36,9 @@ const DebriefView: React.FC = () => {
         }
       });
       const debriefData : Debrief = response.data.debriefs[0];
+      debriefData.createdBy = response.data.debriefs[0].metaData.createdBy;
+      debriefData.updatedBy = response.data.debriefs[0].metaData.updatedBy;
+      console.log('Fetched debrief:', debriefData);
       
       if (debriefData && debriefData.contentItems) {
         debriefData.contentItems = debriefData.contentItems.map((item: any) => {
@@ -68,6 +71,12 @@ const DebriefView: React.FC = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // Parse labels string into array (assuming labels are comma-separated)
+  const parseLabels = (labelsString: string): string[] => {
+    if (!labelsString) return [];
+    return labelsString.split(',').map(label => label.trim()).filter(label => label);
   };
 
   const safeDisplay = (content: any): string => {
@@ -125,6 +134,20 @@ const DebriefView: React.FC = () => {
           <div className={styles.debriefMeta}>
             <span className={styles.debriefDate}>Date: {formatDate(debrief.date)}</span>
             <span className={styles.debriefCreator}>Created by: {safeDisplay(debrief.createdBy)}</span>
+            
+            {/* Labels display */}
+            {debrief.labels && (
+              <div className={styles.labelsContainer}>
+                <strong>Labels: </strong>
+                <div className={styles.labelsList}>
+                  {parseLabels(debrief.labels).map((label, index) => (
+                    <span key={index} className={styles.labelItem}>
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className={styles.contentItemsSection}>

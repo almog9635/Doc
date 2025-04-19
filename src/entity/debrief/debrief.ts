@@ -7,6 +7,7 @@ export interface Debrief{
     id: string;
     title: string;
     date: ZonedDateTime;
+    labels: string;
     createdBy: string;
     updatedBy: string;
     contentItems: Array<ContentItem>;

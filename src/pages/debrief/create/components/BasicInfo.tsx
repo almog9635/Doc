@@ -6,7 +6,10 @@ interface BasicInfoProps {
   debriefDate: string;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDateChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  errors: any;
+  errors: {
+    title?: string;
+    debriefDate?: string;
+  };
 }
 
 const BasicInfo: React.FC<BasicInfoProps> = ({
@@ -20,26 +23,28 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
     <div className={styles.debriefSection}>
       <h2>Basic Information</h2>
       <label>
-        Title
+        Title<span className={styles.required}>*</span>
         <input
           type="text"
           value={title}
           onChange={onTitleChange}
           placeholder="Enter debrief title"
           className={`${styles.inputField} ${errors.title ? styles.fieldRequired : ''}`}
+          required
         />
-        {errors.title && <span className={styles.errorMessage}>{errors.title}</span>}
+        {errors.title && <span className={`${styles.errorMessage} error-message`}>{errors.title}</span>}
       </label>
       
       <label>
-        Date and Time
+        Date and Time<span className={styles.required}>*</span>
         <input
           type="datetime-local"
           value={debriefDate}
           onChange={onDateChange}
           className={`${styles.inputField} ${errors.debriefDate ? styles.fieldRequired : ''}`}
+          required
         />
-        {errors.debriefDate && <span className={styles.errorMessage}>{errors.debriefDate}</span>}
+        {errors.debriefDate && <span className={`${styles.errorMessage} error-message`}>{errors.debriefDate}</span>}
       </label>
     </div>
   );

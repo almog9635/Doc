@@ -14,7 +14,7 @@ interface ContentItemsSectionProps {
   commentBullet: string;
   tableColumns: Column[];
   tableRows: Row[];
-  paragraphComments: Comment[]; // Make sure this is properly typed
+  paragraphComments: Comment[];
   editingContentItemId: string | null;
   editingColumnId: string | null;
   editColumnName: string;
@@ -23,7 +23,8 @@ interface ContentItemsSectionProps {
   handlers: {
     handleContentTypeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     handleContentNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleColumnNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Add this new handler
+    handleColumnNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleCommentBulletChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     handleAddContentItem: () => void;
     handleEditContentItem: (id: string) => void;
     handleUpdateContentItem: () => void;
@@ -35,12 +36,12 @@ interface ContentItemsSectionProps {
     handleAddRow: () => void;
     handleCellChange: (rowId: string, columnId: string, value: string) => void;
     handleAddComment: () => void;
-    handleEditComment: (id: string) => void;
+    handleEditComment: (id: string | null) => void;
     handleUpdateComment: () => void;
     handleDeleteComment: (id: string) => void;
-    handleCommentBulletChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    handleDeleteContentItem: (id: string) => void;
   };
-  errors: string;
+  errors?: string;
 }
 
 const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
@@ -63,75 +64,61 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
 }) => {
   return (
     <div className={styles.debriefSection}>
-      <h2>{editMode ? 'Edit Content Item' : 'Content Items'}</h2>
+      <h2>{editMode ? `Editing: ${currentContentName}` : 'Add New Content Item'}</h2>
       <div className={styles.contentForm}>
-        <label>
-          Content Type
-          <select 
-            value={contentType} 
-            onChange={handlers.handleContentTypeChange}
-            className={styles.selectField}
-            disabled={editMode && 'columns' in contentItems.find(item => item.id === editingContentItemId)!}
-          >
-            <option value="PARAGRAPH">Paragraph</option>
-            <option value="TABLE">Table</option>
-          </select>
-        </label>
-        
-        <label>
-          Content Name
-          <input
-            type="text"
-            value={currentContentName}
-            onChange={handlers.handleContentNameChange}
-            placeholder="Enter content name"
-            className={styles.inputField}
-          />
-        </label>
-        
+        <>
+          <label>
+            Content Type
+            <select
+              value={contentType}
+              onChange={handlers.handleContentTypeChange}
+              className={styles.selectField}
+              disabled={editMode}
+            >
+              <option value="PARAGRAPH">Paragraph</option>
+              <option value="TABLE">Table</option>
+            </select>
+          </label>
+          <label>
+            Content Name<span className={styles.required}>*</span>
+            <input
+              type="text"
+              value={currentContentName}
+              onChange={handlers.handleContentNameChange}
+              placeholder="Enter content name"
+              className={styles.inputField}
+              required
+            />
+          </label>
+        </>
+
         {contentType === 'TABLE' && (
           <div className={styles.tableSection}>
-            <h3>Define Table</h3>
-            
-            <div className={styles.columnForm}>
-              {editingColumnId ? (
-                <>
-                  <label>
-                    Edit Column Name
-                    <input
-                      type="text"
-                      value={editColumnName}
-                      onChange={(e) => handlers.handleColumnNameChange(e)}
-                      placeholder="Enter column name"
-                      className={styles.inputField}
-                    />
-                  </label>
-                  <button onClick={handlers.handleUpdateColumn} className={styles.updateButton}>
-                    Update Column
-                  </button>
-                  <button onClick={() => handlers.handleCancelEdit()} className={styles.cancelButton}>
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <label>
-                    Column Name
-                    <input
-                      type="text"
-                      value={columnName}
-                      onChange={handlers.handleColumnNameChange}
-                      placeholder="Enter column name"
-                      className={styles.inputField}
-                    />
-                  </label>
-                  <button onClick={handlers.handleAddColumn} className={styles.addButton}>
-                    Add Column
-                  </button>
-                </>
-              )}
-            </div>
-            
+            <label>
+              {editingColumnId ? 'Edit Column Name' : 'New Column Name'}<span className={styles.required}>*</span>
+              <input
+                type="text"
+                value={editingColumnId ? editColumnName : columnName}
+                onChange={handlers.handleColumnNameChange}
+                placeholder="Enter column name"
+                className={styles.inputField}
+                required={!editingColumnId}
+              />
+            </label>
+            {editingColumnId ? (
+              <div className={styles.editButtonGroup}>
+                <button onClick={handlers.handleUpdateColumn} className={styles.updateButton}>
+                  Update Column
+                </button>
+                <button onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button onClick={handlers.handleAddColumn} className={styles.addButton}>
+                Add Column
+              </button>
+            )}
             {tableColumns.length > 0 && (
               <div>
                 <h4>Columns</h4>
@@ -140,16 +127,17 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                     <li key={column.id} className={styles.columnListItem}>
                       <span>{index + 1}. {column.name}</span>
                       <div className={styles.itemActions}>
-                        <button 
-                          onClick={() => handlers.handleEditColumn(column.id)} 
+                        <button
+                          onClick={() => handlers.handleEditColumn(column.id)}
                           className={styles.smallEditButton}
                           disabled={!!editingColumnId}
                         >
                           Edit
                         </button>
-                        <button 
-                          onClick={() => handlers.handleDeleteColumn(column.id)} 
+                        <button
+                          onClick={() => handlers.handleDeleteColumn(column.id)}
                           className={styles.smallDeleteButton}
+                          disabled={!!editingColumnId}
                         >
                           Delete
                         </button>
@@ -157,9 +145,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                     </li>
                   ))}
                 </ul>
-                
                 <button onClick={handlers.handleAddRow} className={styles.addButton}>Add Row</button>
-                
                 {tableRows.length > 0 && (
                   <div className={styles.tablePreview}>
                     <h4>Table Preview</h4>
@@ -197,39 +183,42 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
             )}
           </div>
         )}
-        
+
         {contentType === 'PARAGRAPH' && (
           <div className={styles.paragraphSection}>
-            <h3>Define Paragraph</h3>
-            
+            <h3>Define Paragraph Comments</h3>
             <div className={styles.commentForm}>
               {editingCommentId ? (
                 <>
                   <label>
-                    Edit Comment
+                    Edit Comment<span className={styles.required}>*</span>
                     <textarea
                       value={editCommentBullet}
-                      onChange={(e) => handlers.handleCommentBulletChange(e)}
+                      onChange={handlers.handleCommentBulletChange}
                       placeholder="Enter comment"
                       className={styles.textareaField}
+                      required
                     />
                   </label>
-                  <button onClick={handlers.handleUpdateComment} className={styles.updateButton}>
-                    Update Comment
-                  </button>
-                  <button onClick={() => handlers.handleCancelEdit()} className={styles.cancelButton}>
-                    Cancel
-                  </button>
+                  <div className={styles.editButtonGroup}>
+                    <button onClick={handlers.handleUpdateComment} className={styles.updateButton}>
+                      Update Comment
+                    </button>
+                    <button onClick={() => handlers.handleEditComment(null)} className={styles.cancelEditButton}>
+                      Cancel
+                    </button>
+                  </div>
                 </>
               ) : (
                 <>
                   <label>
-                    Comment
+                    New Comment<span className={styles.required}>*</span>
                     <textarea
                       value={commentBullet}
                       onChange={handlers.handleCommentBulletChange}
                       placeholder="Enter comment"
                       className={styles.textareaField}
+                      required
                     />
                   </label>
                   <button onClick={handlers.handleAddComment} className={styles.addButton}>
@@ -238,8 +227,6 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                 </>
               )}
             </div>
-            
-            {/* Add null check before accessing .length */}
             {paragraphComments && paragraphComments.length > 0 && (
               <div>
                 <h4>Comments</h4>
@@ -248,16 +235,17 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                     <li key={comment.id} className={styles.commentListItem}>
                       <span>{index + 1}. {comment.bullet}</span>
                       <div className={styles.itemActions}>
-                        <button 
-                          onClick={() => handlers.handleEditComment(comment.id)} 
+                        <button
+                          onClick={() => handlers.handleEditComment(comment.id)}
                           className={styles.smallEditButton}
                           disabled={!!editingCommentId}
                         >
                           Edit
                         </button>
-                        <button 
-                          onClick={() => handlers.handleDeleteComment(comment.id)} 
+                        <button
+                          onClick={() => handlers.handleDeleteComment(comment.id)}
                           className={styles.smallDeleteButton}
+                          disabled={!!editingCommentId}
                         >
                           Delete
                         </button>
@@ -269,14 +257,14 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
             )}
           </div>
         )}
-        
+
         {editMode ? (
           <div className={styles.editButtonGroup}>
             <button onClick={handlers.handleUpdateContentItem} className={styles.updateButton}>
               Update Content Item
             </button>
             <button onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
-              Cancel
+              Cancel Edit
             </button>
           </div>
         ) : (
@@ -285,23 +273,34 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
           </button>
         )}
       </div>
-      
+
       {contentItems.length > 0 && (
         <div>
-          <h3>Content Items</h3>
+          <h3>Content Items Overview</h3>
           <ul className={styles.contentList}>
             {contentItems.map((item, index) => (
               <li key={item.id} className={styles.contentListItem}>
                 <div className={styles.contentItemInfo}>
-                  {index + 1}. {item.name} - Type: {'columns' in item ? 'Table' : 'Paragraph'}
+                  {index + 1}. {item.name}
+                  {' - '}
+                  <span className={styles.contentTypeIndicator}>
+                    {item.type === 'table' ? 'Table' : 'Paragraph'}
+                  </span>
                 </div>
                 <div className={styles.contentItemActions}>
-                  <button 
-                    onClick={() => handlers.handleEditContentItem(item.id)} 
+                  <button
+                    onClick={() => handlers.handleEditContentItem(item.id)}
                     className={styles.editButton}
-                    disabled={editMode}
+                    disabled={editMode && editingContentItemId !== item.id}
                   >
                     Edit
+                  </button>
+                  <button
+                    onClick={() => handlers.handleDeleteContentItem(item.id)}
+                    className={styles.deleteButton}
+                    disabled={editMode}
+                  >
+                    Delete
                   </button>
                 </div>
               </li>
@@ -309,7 +308,6 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
           </ul>
         </div>
       )}
-      
       {errors && <span className={styles.errorMessage}>{errors}</span>}
     </div>
   );

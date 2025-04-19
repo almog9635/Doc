@@ -11,6 +11,7 @@ import BasicInfo from './components/BasicInfo';
 import ContentItemsSection from './components/ContentItemsSection';
 import TasksSection from './components/TasksSection';
 import LessonsSection from './components/LessonsSection';
+import MandatorySections from './components/mandatory';
 
 // Import hooks
 import { useDebriefForm } from './hooks/useDebriefForm';
@@ -27,99 +28,144 @@ const DebriefForm: React.FC = () => {
     handlers
   } = useDebriefForm();
   
-  const { errors, validateForm } = useValidation(formData);
+  const { errors, isValid } = useValidation(formData);
 
-  const handleSubmit = async () => {
-    if (!validateForm()) {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (isValid) {
+      try {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+        
+        const decoded = jwtDecode<DecodedToken>(token);
+        
+        // Group content items by type
+        const paragraphs: any[] = [];
+        const tables: any[] = [];
+        
+        // Add mandatory sections as paragraphs
+        if (formData.backgroundComments.length > 0) {
+          paragraphs.push({
+            id: null, // Will be set later
+            name: 'Background',
+            comments: formData.backgroundComments
+          });
+        }
+        if (formData.tripProgressComments.length > 0) {
+          paragraphs.push({
+            id: null, // Will be set later
+            name: 'Trip Progress',
+            comments: formData.tripProgressComments
+          });
+        }
+        if (formData.routeConsiderationsComments.length > 0) {
+          paragraphs.push({
+            id: null, // Will be set later
+            name: 'Route Considerations',
+            comments: formData.routeConsiderationsComments
+          });
+        }
+        
+        // Add other content items
+        formData.contentItems.forEach(item => {
+          if ('columns' in item) {
+            tables.push(item);
+          } else if ('comments' in item) {
+            // Ensure it's not one of the mandatory sections already added
+            if (!['Background', 'Trip Progress', 'Route Considerations'].includes(item.name)) {
+              paragraphs.push(item);
+            }
+          }
+        });
+        
+        // Prepare tasks with null IDs
+        const tasksWithNullIds: ApiTask[] = formData.tasks.map(task => ({
+          id: null,
+          content: task.content,
+          startDate: task.startDate,
+          deadline: task.deadline,
+          user: task.user
+        }));
+        
+        // Prepare lessons with null IDs
+        const lessonsWithNullIds: ApiLesson[] = formData.lessons.map(lesson => ({
+          id: null,
+          content: lesson.content, // Explicitly include required fields
+          tasks: lesson.tasks.map(task => ({
+            id: null,
+            content: task.content,
+            startDate: task.startDate,
+            deadline: task.deadline,
+            user: task.user
+          }))
+        }));
+        
+        const paragraphsWithNullIds: ApiParagraph[] = paragraphs.map((paragraph, index) => ({
+          id: null,
+          name: paragraph.name,
+          index: index, // Use map index
+          comments: paragraph.comments.map((comment: any, commentIndex: number) => ({
+            id: null,
+            bullet: comment.bullet,
+            index: commentIndex // Use map index for comments
+          }))
+        }));
+        
+        const tablesWithNullIds: ApiTable[] = tables.map((table, index) => ({
+          id: null,
+          name: table.name,
+          index: index,
+          columns: table.columns,
+          rows: table.rows.map((row: any) => ({
+            id: row.id,
+            index: row.index,
+            cells: row.cells.map((cell: any) => ({
+              row: row.id,
+              column: cell.column,
+              value: cell.value
+            }))
+          }))
+        }));
+        
+        const debrief: ApiDebriefInput = {
+          id: uuidv4(),
+          title: formData.title,
+          date: new Date(formData.debriefDate).toISOString(),
+          contentItems: {
+            paragraphs: paragraphsWithNullIds,
+            tables: tablesWithNullIds
+          },
+          tasks: tasksWithNullIds,
+          lessons: lessonsWithNullIds,
+        };
+        
+        console.log('Sending debrief:', debrief);
+        
+        const response = await axios.post('http://localhost:4000/debrief/create', debrief, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'User-Id': decoded.sub
+          }
+        });
+        
+        if (response.status === 201 || response.status === 200) {
+          navigate('/debriefs');
+        } else {
+          console.error('Error response:', response);
+        }
+      } catch (error) {
+        console.error('Error creating debrief:', error);
+      }
+    } else {
+      console.log("Form is invalid:", errors);
       const errorElement = document.querySelector('.'+styles.errorMessage);
       if (errorElement) {
         errorElement.scrollIntoView({ behavior: 'smooth' });
       }
-      return;
-    }
-    
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-      
-      const decoded = jwtDecode<DecodedToken>(token);
-      
-      // Group content items by type
-      const paragraphs: any[] = [];
-      const tables: any[] = [];
-      
-      formData.contentItems.forEach(item => {
-        if ('columns' in item) {
-          tables.push(item);
-        } else if ('comments' in item) {
-          paragraphs.push(item);
-        }
-      });
-      
-      // Prepare tasks with null IDs
-      const tasksWithNullIds: ApiTask[] = formData.tasks.map(task => ({
-        ...task,
-        id: null
-      }));
-      
-      // Prepare lessons with null IDs
-      const lessonsWithNullIds: ApiLesson[] = formData.lessons.map(lesson => ({
-        ...lesson,
-        id: null,
-        tasks: lesson.tasks.map(task => ({
-          ...task,
-          id: null
-        }))
-      }));
-      
-      // Prepare paragraphs with null IDs
-      const paragraphsWithNullIds: ApiParagraph[] = paragraphs.map(paragraph => ({
-        ...paragraph,
-        id: null,
-        comments: paragraph.comments
-      }));
-      
-      // Prepare tables with null IDs
-      const tablesWithNullIds: ApiTable[] = tables.map(table => ({
-        ...table,
-        id: null,
-        columns: table.columns,
-        rows: table.rows
-      }));
-      
-      // Create the API-specific debrief object
-      const debrief: ApiDebriefInput = {
-        id: uuidv4(),
-        title: formData.title,
-        date: new Date(formData.debriefDate).toISOString(),
-        contentItems: {
-          paragraphs: paragraphsWithNullIds,
-          tables: tablesWithNullIds
-        },
-        tasks: tasksWithNullIds,
-        lessons: lessonsWithNullIds,
-      };
-      
-      console.log('Sending debrief:', debrief);
-      
-      const response = await axios.post('http://localhost:4000/debrief/create', debrief, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'User-Id': decoded.sub
-        }
-      });
-      
-      if (response.status === 201 || response.status === 200) {
-        navigate('/debriefs');
-      } else {
-        console.error('Error response:', response);
-      }
-    } catch (error) {
-      console.error('Error creating debrief:', error);
     }
   };
 
@@ -139,6 +185,33 @@ const DebriefForm: React.FC = () => {
         errors={errors}
       />
       
+      <MandatorySections
+        background={{
+          comments: formData.backgroundComments,
+          bullet: uiState.backgroundBullet,
+          editingCommentId: uiState.editingBackgroundCommentId,
+          editBullet: uiState.editBackgroundCommentBullet,
+        }}
+        tripProgress={{
+          comments: formData.tripProgressComments,
+          bullet: uiState.tripProgressBullet,
+          editingCommentId: uiState.editingTripProgressCommentId,
+          editBullet: uiState.editTripProgressCommentBullet,
+        }}
+        routeConsiderations={{
+          comments: formData.routeConsiderationsComments,
+          bullet: uiState.routeConsiderationsBullet,
+          editingCommentId: uiState.editingRouteConsiderationsCommentId,
+          editBullet: uiState.editRouteConsiderationsCommentBullet,
+        }}
+        handlers={handlers.mandatoryHandlers}
+        errors={{
+          background: errors.background,
+          tripProgress: errors.tripProgress,
+          routeConsiderations: errors.routeConsiderations
+        }}
+      />
+      
       <ContentItemsSection 
         contentItems={formData.contentItems}
         contentType={uiState.contentType}
@@ -148,7 +221,7 @@ const DebriefForm: React.FC = () => {
         commentBullet={uiState.commentBullet}
         tableColumns={uiState.tableColumns}
         tableRows={uiState.tableRows}
-        paragraphComments={uiState.paragraphComments || []} // Add null fallback
+        paragraphComments={uiState.paragraphComments || []}
         editingContentItemId={uiState.editingContentItemId}
         editingColumnId={uiState.editingColumnId}
         editColumnName={uiState.editColumnName}

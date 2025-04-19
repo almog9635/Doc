@@ -562,3 +562,57 @@ select.fieldRequired {
   font-weight: 600;
   color: #495057;
 }
+
+/* Add these styles to the end of your CSS file */
+.mandatoryItem {
+  border-left: 4px solid #007bff;
+  padding-left: 12px;
+}
+
+.mandatoryBadge {
+  background-color: #007bff;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.mandatorySectionsContainer {
+  margin-bottom: 30px;
+}
+
+.mandatorySectionsContainer h2 {
+  padding-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+  margin-bottom: 20px;
+}
+
+.mandatorySection {
+  background-color: #f8f9fa;
+  border-left: 4px solid #007bff;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.bulletPoint {
+  font-size: 1.2em;
+  margin-right: 8px;
+  color: #007bff;
+}
+
+.emptyState {
+  color: #6c757d;
+  font-style: italic;
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
+.commentContent {
+  flex-grow: 1;
+}
