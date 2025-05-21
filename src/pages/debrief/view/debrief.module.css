@@ -352,6 +352,16 @@
   border-top: 1px solid #eee;
 }
 
+.lessonCluster {
+  padding: 5px 10px;
+  margin: 5px 0 10px 25px;
+  font-size: 0.9rem;
+  color: #555;
+  background-color: #f0f8ff;
+  border-left: 3px solid #007bff;
+  border-radius: 0 4px 4px 0;
+}
+
 .emptyMessage {
   color: #666;
   font-style: italic;

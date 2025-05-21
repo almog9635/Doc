@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import styles from './addUser.module.css';
 import axios from 'axios';
-import { Role } from '../../../entity/role';
+import { Role } from '../../../entity/role/role';
 import { Group } from '../../../entity/group';
 import { DecodedToken } from '../../../entity/decodedToken';
 import { ServiceType, Rank } from '../../../consts';
@@ -22,7 +22,6 @@ const AddUser: React.FC = () => {
   const [rank, setRank] = useState<Rank | ''>('');
 
   useEffect(() => {
-    // Check for "Admin" role
     const token = localStorage.getItem('accessToken');
     if (!token) {
       navigate('/login');
@@ -38,7 +37,6 @@ const AddUser: React.FC = () => {
 
   useEffect(() => {
     if (isAuthorized) {
-      // Fetch available roles from the server
     const token = localStorage.getItem('accessToken');
     axios.get('http://localhost:4000/roles', {
       headers: {

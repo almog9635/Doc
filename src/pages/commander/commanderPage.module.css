@@ -1,0 +1,142 @@
+.container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #f0f4f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #333;
+}
+
+.subtitle {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 0.5rem;
+}
+
+.commanderInfo {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.commanderInfo h2 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.userList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.userItem {
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.userInfo h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.userInfo p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0.2rem 0;
+}
+
+.taskList {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.taskList h4 {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    color: #495057;
+}
+
+.tasks {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.taskItem {
+    background-color: #f9f9f9;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.completedTask {
+    background-color: #d4edda; /* Light green for completed tasks */
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.pendingTask {
+    background-color: #e2e3e5; /* Light grey for uncompleted tasks */
+    color: #383d41;
+    border-left: 4px solid #6c757d;
+}
+
+.overdueTask {
+    background-color: #f8d7da; /* Light red for tasks past deadline */
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.taskItem p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.taskItem strong {
+    color: #333;
+}
+
+.taskItem a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.taskItem a:hover {
+    text-decoration: underline;
+}
+
+.loading,
+.error {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+}

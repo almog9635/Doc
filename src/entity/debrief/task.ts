@@ -6,5 +6,6 @@ export interface Task {
     content: string;
     startDate: ZonedDateTime;
     deadline: ZonedDateTime;
+    completed: boolean;
     user: User;
 }

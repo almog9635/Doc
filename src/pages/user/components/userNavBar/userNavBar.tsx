@@ -9,10 +9,6 @@ const UserNavBar: React.FC = () => {
                 <span className={styles.icon}>+</span>
                 Add User
             </Link>
-            <Link to="/deleteUser" className={styles.userButton}>
-                <span className={styles.icon}>×</span>
-                Delete User
-            </Link>
         </nav>
     );
 };

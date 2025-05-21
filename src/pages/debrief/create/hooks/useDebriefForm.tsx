@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { ContentItem } from '../../../../entity/debrief/content/content-item';
 import { Task } from '../../../../entity/debrief/task';
@@ -9,6 +10,10 @@ import { Row } from '../../../../entity/debrief/content/table/row';
 import { Paragraph } from '../../../../entity/debrief/content/paragraph/paragraph';
 import { Comment } from '../../../../entity/debrief/content/paragraph/comment';
 import { Cell } from '../../../../entity/debrief/content/table/cell';
+import { User } from '../../../../entity/user';
+import { DecodedToken } from '../../../../entity/decodedToken';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 export function useDebriefForm() {
   // Form data
@@ -17,6 +22,9 @@ export function useDebriefForm() {
   const [contentItems, setContentItems] = useState<ContentItem[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [usersGroup, setUsersGroup] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Mandatory Sections State
   const [backgroundComments, setBackgroundComments] = useState<Comment[]>([]);
@@ -76,6 +84,39 @@ export function useDebriefForm() {
     const formattedDate = now.toISOString().slice(0, 16);
     setDebriefDate(formattedDate);
   }, []);
+
+  // Fetch users when component mounts
+  useEffect(() => {
+    fetchUsersGroup();
+  }, []);
+
+  const fetchUsersGroup = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        console.error('No access token found');
+        setError('Authentication error. Please log in again.');
+        return;
+      }
+      
+      const decoded = jwtDecode<DecodedToken>(token);
+      const response = await axios.get(`http://localhost:4000/user/group/${decoded.sub}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      setUsersGroup(response.data.users || []);
+    } catch (error) {
+      console.error('Error fetching users group:', error);
+      setError('Failed to load users. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Basic Info Handlers
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -671,28 +712,22 @@ export function useDebriefForm() {
   const handleAddLessonTask = () => {
     if (!selectedLessonId || !lessonTaskContent.trim() || !lessonTaskStartDate || !lessonTaskDeadline) return;
 
+    const selectedUser = usersGroup.find(user => user.id === lessonTaskUser);
+
     const newTaskForLesson: Task = {
       id: uuidv4(),
       content: lessonTaskContent,
       startDate: lessonTaskStartDate,
       deadline: lessonTaskDeadline,
-      user: lessonTaskUser || null,
-      index: 0
+      user: selectedUser as User,
+      completed: false
     };
-
-    const existingTask = tasks.find(t => t.content === newTaskForLesson.content && t.startDate === newTaskForLesson.startDate && t.deadline === newTaskForLesson.deadline && t.user === newTaskForLesson.user);
-    if (!existingTask) {
-      newTaskForLesson.index = tasks.length;
-      setTasks(prevTasks => [...prevTasks, newTaskForLesson]);
-    } else {
-      newTaskForLesson.id = existingTask.id;
-    }
 
     setLessons(prevLessons =>
       prevLessons.map(lesson => {
         if (lesson.id === selectedLessonId) {
           if (!lesson.tasks.some(t => t.id === newTaskForLesson.id)) {
-            const updatedTasks = [...lesson.tasks, { ...newTaskForLesson, index: lesson.tasks.length }];
+            const updatedTasks = [...lesson.tasks, newTaskForLesson];
             return { ...lesson, tasks: updatedTasks };
           }
         }

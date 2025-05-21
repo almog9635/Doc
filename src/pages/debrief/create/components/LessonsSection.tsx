@@ -131,10 +131,10 @@ const LessonsSection: React.FC<LessonsSectionProps> = ({
             </label>
             
             <div className={styles.editButtonGroup}>
-              <button onClick={handlers.handleUpdateLesson} className={styles.updateButton}>
+              <button type="button" onClick={handlers.handleUpdateLesson} className={styles.updateButton}>
                 Update Lesson
               </button>
-              <button onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
+              <button type="button" onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
                 Cancel
               </button>
             </div>
@@ -152,7 +152,7 @@ const LessonsSection: React.FC<LessonsSectionProps> = ({
               />
             </label>
             
-            <button onClick={handlers.handleAddLesson} className={styles.addButton}>Add Lesson</button>
+            <button type="button" onClick={handlers.handleAddLesson} className={styles.addButton}>Add Lesson</button>
           </>
         )}
       </div>
@@ -173,12 +173,14 @@ const LessonsSection: React.FC<LessonsSectionProps> = ({
                       />
                       <div className={styles.editButtonGroup}>
                         <button 
+                          type="button"
                           onClick={handlers.handleUpdateLesson} 
                           className={styles.smallButton}
                         >
                           Save
                         </button>
                         <button 
+                          type="button"
                           onClick={handlers.handleCancelEdit} 
                           className={styles.smallCancelButton}
                         >
@@ -192,6 +194,7 @@ const LessonsSection: React.FC<LessonsSectionProps> = ({
                         <h4>{index + 1}. {lesson.content}</h4>
                         <div className={styles.itemActions}>
                           <button 
+                            type="button"
                             onClick={() => handleEditLessonSafely(lesson.id)} 
                             className={styles.smallEditButton}
                             disabled={!!editingLessonId || selectedLessonId !== null}
@@ -199,6 +202,7 @@ const LessonsSection: React.FC<LessonsSectionProps> = ({
                             Edit
                           </button>
                           <button 
+                            type="button"
                             onClick={() => handlers.handleDeleteLesson(lesson.id)} 
                             className={styles.smallDeleteButton}
                             disabled={!!editingLessonId || selectedLessonId === lesson.id}
@@ -221,13 +225,14 @@ const LessonsSection: React.FC<LessonsSectionProps> = ({
                                 <strong>Task:</strong> {task.content}
                               </p>
                               <p>
-                                <strong>Assigned to:</strong> {task.user ? getUserNameById(task.user) : 'Unassigned'}
+                                <strong>Assigned to:</strong> {task.user ? getUserNameById(task.user.id) : 'Unassigned'}
                               </p>
                               <p>
                                 <strong>Timeline:</strong> {new Date(task.startDate).toLocaleString()} - {new Date(task.deadline).toLocaleString()}
                               </p>
                             </div>
                             <button 
+                              type="button"
                               onClick={() => handlers.handleRemoveLessonTask(lesson.id, task.id)} 
                               className={styles.smallDeleteButton}
                             >
@@ -242,6 +247,7 @@ const LessonsSection: React.FC<LessonsSectionProps> = ({
                 
                 {!editingLessonId && (
                   <button 
+                    type="button"
                     onClick={() => handleSelectLessonSafely(lesson.id)} 
                     className={`${styles.addButton} ${selectedLessonId === lesson.id ? styles.activeButton : ''}`}
                     disabled={!!editingLessonId || (selectedLessonId !== null && selectedLessonId !== lesson.id)}
@@ -318,13 +324,14 @@ const LessonsSection: React.FC<LessonsSectionProps> = ({
               
               <div className={styles.lessonTaskFormButtons}>
                 <button 
+                  type="button"
                   onClick={handlers.handleAddLessonTask} 
                   className={styles.addButton}
                   disabled={!isTaskFormValid}
                 >
                   Add Task to Lesson
                 </button>
-                <button onClick={handlers.handleCancelLessonTask} className={styles.cancelButton}>
+                <button type="button" onClick={handlers.handleCancelLessonTask} className={styles.cancelButton}>
                   Cancel
                 </button>
               </div>

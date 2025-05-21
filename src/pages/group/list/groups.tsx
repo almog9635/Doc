@@ -126,7 +126,7 @@ const Groups: React.FC = () => {
                 </div>
               </div>
               <Link 
-                to={`/editGroup/${group.id}`} 
+                to={`/group/update/${group.id}`} 
                 className={styles.editButton}
                 onClick={(e: React.MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
               >

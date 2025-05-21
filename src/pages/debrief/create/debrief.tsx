@@ -5,22 +5,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { DecodedToken } from '../../../entity/decodedToken';
 import { ApiDebriefInput, ApiTask, ApiLesson, ApiParagraph, ApiTable } from '../../../input/debrief/api-types';
 import styles from './debrief.module.css';
-
-// Import components
 import BasicInfo from './components/BasicInfo';
 import ContentItemsSection from './components/ContentItemsSection';
 import TasksSection from './components/TasksSection';
 import LessonsSection from './components/LessonsSection';
 import MandatorySections from './components/mandatory';
-
-// Import hooks
 import { useDebriefForm } from './hooks/useDebriefForm';
 import { useValidation } from './hooks/useValidation';
 import { useAuthCheck } from '../../auth/hooks/Authentication';
 
 const DebriefForm: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuthorized } = useAuthCheck();
+  const { isAuthorized } = useAuthCheck(['admin', 'leader', 'soldier']);
   
   const {
     formData,
@@ -99,7 +95,7 @@ const DebriefForm: React.FC = () => {
             content: task.content,
             startDate: task.startDate,
             deadline: task.deadline,
-            user: task.user
+            user: task.user.id
           }))
         }));
         

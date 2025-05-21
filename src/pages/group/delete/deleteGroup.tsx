@@ -35,6 +35,7 @@ const DeleteGroup: React.FC = () => {
           'Content-Type': 'application/json'
         }
       });
+      console.log('Fetched group data:', response.data.groups);
       setGroup(response.data.groups);
     } catch (error) {
       console.error('Error fetching group:', error);
@@ -86,7 +87,7 @@ const DeleteGroup: React.FC = () => {
       {group && (
         <div className={styles.groupDetails}>
           <p><strong>Group Name:</strong> {group.name}</p>
-          <p><strong>Commander ID:</strong> {group.commander.id}</p>
+          <p><strong>Commander ID:</strong> {group.commander?.id}</p>
           <button onClick={handleDelete} className={styles.deleteButton}>
             Delete Group
           </button>

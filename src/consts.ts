@@ -26,3 +26,5 @@ export enum ServiceType {
     MILUIM = "MILUIM",
     EZRAH = "EZRAH",
 }
+
+export const endpoint = "http://localhost:4000/";

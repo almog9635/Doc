@@ -4,6 +4,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import styles from './debrief.module.css';
 import { Debrief } from '../../../entity/debrief/debrief';
 import { useAuthCheck } from '../../auth/hooks/Authentication';
+import { DecodedToken } from '../../../entity/decodedToken';
+import { jwtDecode } from 'jwt-decode';
 
 const DebriefView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +14,7 @@ const DebriefView: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { isAuthorized } = useAuthCheck();
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     if (isAuthorized && id) {
@@ -28,21 +31,55 @@ const DebriefView: React.FC = () => {
         navigate('/login');
         return;
       }
-
+      const decodedToken = jwtDecode<DecodedToken>(token);
+      setIsAdmin(decodedToken.roles.includes("admin"));
       const response = await axios.get(`http://localhost:4000/debrief/${debriefId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         }
       });
-      const debriefData : Debrief = response.data.debriefs[0];
+      const debriefData: Debrief = response.data.debriefs[0];
       debriefData.createdBy = response.data.debriefs[0].metaData.createdBy;
       debriefData.updatedBy = response.data.debriefs[0].metaData.updatedBy;
-      console.log('Fetched debrief:', debriefData);
+      
+      if (debriefData.tasks && debriefData.lessons) {
+        const taskIdsInLessons = new Set<string>();
+        debriefData.lessons.forEach(lesson => {
+          if (lesson.tasks) {
+            lesson.tasks.forEach(task => {
+              taskIdsInLessons.add(task.id);
+            });
+          }
+        });
+        
+        const seenTaskIds = new Set<string>();
+        if (debriefData.tasks.length > 0) {
+          debriefData.tasks = debriefData.tasks.filter(task => {
+            const shouldKeep = !taskIdsInLessons.has(task.id) && !seenTaskIds.has(task.id);
+            seenTaskIds.add(task.id);
+            return shouldKeep;
+          });
+        }
+      }
+      
+      if (debriefData.lessons && debriefData.lessons.length > 0) {
+        debriefData.lessons.forEach(lesson => {
+          if (lesson.tasks && lesson.tasks.length > 0) {
+            const seenTaskIds = new Set<string>();
+            lesson.tasks = lesson.tasks.filter(task => {
+              if (seenTaskIds.has(task.id)) {
+                return false;
+              }
+              seenTaskIds.add(task.id);
+              return true;
+            });
+          }
+        });
+      }
       
       if (debriefData && debriefData.contentItems) {
         debriefData.contentItems = debriefData.contentItems.map((item: any) => {
-          // If item doesn't have a type, infer it from its structure
           if (!item.type) {
             if (item.comments) {
               item.type = 'paragraph';
@@ -73,7 +110,6 @@ const DebriefView: React.FC = () => {
     });
   };
 
-  // Parse labels string into array (assuming labels are comma-separated)
   const parseLabels = (labelsString: string): string[] => {
     if (!labelsString) return [];
     return labelsString.split(',').map(label => label.trim()).filter(label => label);
@@ -104,9 +140,9 @@ const DebriefView: React.FC = () => {
     <div className={styles.debriefContainer}>
       <div className={styles.debriefHeader}>
         <Link to="/debriefs" className={styles.backButton}>← Back to Debriefs</Link>
-        {!loading && !error && debrief && (
+        {!loading && !error && debrief && isAdmin && (
           <div className={styles.headerActions}>
-            <Link to={`/debrief/edit/${id}`} className={styles.editButton}>Edit Debrief</Link>
+            <Link to={`/updateDebrief/${id}`} className={styles.editButton}>Edit Debrief</Link>
           </div>
         )}
       </div>
@@ -135,7 +171,6 @@ const DebriefView: React.FC = () => {
             <span className={styles.debriefDate}>Date: {formatDate(debrief.date)}</span>
             <span className={styles.debriefCreator}>Created by: {safeDisplay(debrief.createdBy)}</span>
             
-            {/* Labels display */}
             {debrief.labels && (
               <div className={styles.labelsContainer}>
                 <strong>Labels: </strong>
@@ -290,7 +325,6 @@ const DebriefView: React.FC = () => {
             )}
           </div>
 
-          {/* Lessons Section */}
           <div className={styles.lessonsSection}>
             <h2 className={styles.sectionTitle}>Lessons Learned</h2>
             {debrief.lessons && debrief.lessons.length > 0 ? (
@@ -301,6 +335,12 @@ const DebriefView: React.FC = () => {
                       <span className={styles.lessonNumber}>{index + 1}.</span>
                       <span className={styles.lessonContent}>{safeDisplay(lesson.content)}</span>
                     </div>
+                    
+                    {lesson.cluster && (
+                      <div className={styles.lessonCluster}>
+                        <strong>Cluster:</strong> {safeDisplay(lesson.cluster)}
+                      </div>
+                    )}
                     
                     {lesson.tasks && lesson.tasks.length > 0 && (
                       <div className={styles.lessonTasks}>

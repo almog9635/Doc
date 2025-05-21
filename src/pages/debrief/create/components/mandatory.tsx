@@ -19,6 +19,7 @@ interface MandatorySectionProps {
   editCommentBullet: string; // For editing existing comments
   handlers: MandatorySectionHandlers;
   error?: string;
+  requireField?: boolean;
 }
 
 const MandatorySection: React.FC<MandatorySectionProps> = ({
@@ -28,7 +29,8 @@ const MandatorySection: React.FC<MandatorySectionProps> = ({
   editingCommentId,
   editCommentBullet,
   handlers,
-  error
+  error,
+  requireField = true
 }) => {
   return (
     <div className={styles.mandatorySection}>
@@ -43,14 +45,14 @@ const MandatorySection: React.FC<MandatorySectionProps> = ({
                 onChange={handlers.handleEditCommentBulletChange}
                 placeholder="Enter point details"
                 className={styles.textareaField}
-                required
+                required={requireField}
               />
             </label>
             <div className={styles.editButtonGroup}>
-              <button onClick={handlers.handleUpdateComment} className={styles.updateButton}>
+              <button type="button" onClick={handlers.handleUpdateComment} className={styles.updateButton}>
                 Update Point
               </button>
-              <button onClick={() => handlers.handleEditComment(null)} className={styles.cancelEditButton}>
+              <button type="button" onClick={() => handlers.handleEditComment(null)} className={styles.cancelEditButton}>
                 Cancel
               </button>
             </div>
@@ -64,10 +66,10 @@ const MandatorySection: React.FC<MandatorySectionProps> = ({
                 onChange={handlers.handleCommentBulletChange}
                 placeholder="Enter point details"
                 className={styles.textareaField}
-                required
+                required={requireField}
               />
             </label>
-            <button onClick={handlers.handleAddComment} className={styles.addButton}>Add Point</button>
+            <button type="button" onClick={handlers.handleAddComment} className={styles.addButton}>Add Point</button>
           </>
         )}
       </div>
@@ -89,6 +91,7 @@ const MandatorySection: React.FC<MandatorySectionProps> = ({
                     </div>
                     <div className={styles.itemActions}>
                       <button
+                        type="button"
                         onClick={() => handlers.handleEditComment(comment.id)}
                         className={styles.smallEditButton}
                         disabled={!!editingCommentId} // Disable if any comment is being edited
@@ -96,6 +99,7 @@ const MandatorySection: React.FC<MandatorySectionProps> = ({
                         Edit
                       </button>
                       <button
+                        type="button"
                         onClick={() => handlers.handleDeleteComment(comment.id)}
                         className={styles.smallDeleteButton}
                         disabled={!!editingCommentId} // Disable if any comment is being edited
@@ -150,6 +154,7 @@ interface MandatorySectionsProps {
       tripProgress?: string;
       routeConsiderations?: string;
   };
+  requireField?: boolean;
 }
 
 
@@ -158,7 +163,8 @@ const MandatorySections: React.FC<MandatorySectionsProps> = ({
   tripProgress,
   routeConsiderations,
   handlers,
-  errors
+  errors,
+  requireField = true
 }) => {
   return (
     <div className={styles.mandatorySectionsContainer}>
@@ -172,6 +178,7 @@ const MandatorySections: React.FC<MandatorySectionsProps> = ({
         editCommentBullet={background.editBullet}
         handlers={handlers.background} // Pass specific handlers
         error={errors.background}
+        requireField={requireField}
       />
 
       <MandatorySection
@@ -182,6 +189,7 @@ const MandatorySections: React.FC<MandatorySectionsProps> = ({
         editCommentBullet={tripProgress.editBullet}
         handlers={handlers.tripProgress} // Pass specific handlers
         error={errors.tripProgress}
+        requireField={requireField}
       />
 
       <MandatorySection
@@ -192,6 +200,7 @@ const MandatorySections: React.FC<MandatorySectionsProps> = ({
         editCommentBullet={routeConsiderations.editBullet}
         handlers={handlers.routeConsiderations} // Pass specific handlers
         error={errors.routeConsiderations}
+        requireField={requireField}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './sideProfile.module.css';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { DecodedToken } from '../../entity/decodedToken';
 
 const SideProfile: React.FC = () => {
@@ -11,10 +11,14 @@ const SideProfile: React.FC = () => {
     React.useEffect(() => {
         const token = localStorage.getItem('accessToken');
         if (token) {
-            const decodedToken = jwtDecode<DecodedToken>(token);
-            if (decodedToken.sub && decodedToken.name) {
-                setUserName(decodedToken.name);
-                setUserId(decodedToken.sub);
+            try {
+                const decodedToken = jwtDecode<DecodedToken>(token);
+                if (decodedToken.sub && decodedToken.name) {
+                    setUserName(decodedToken.name);
+                    setUserId(decodedToken.sub);
+                }
+            } catch (error) {
+                console.error('Error decoding token:', error);
             }
         }
     }, []);

@@ -5,16 +5,11 @@ import axios from 'axios';
 import styles from './group.module.css';
 import { DecodedToken } from '../../../entity/decodedToken';
 import { Group } from '../../../entity/group';
-import { User } from '../../../entity/user';
-
-interface GroupDetails extends Group {
-  users: User[];
-}
 
 const GroupPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [group, setGroup] = useState<GroupDetails | null>(null);
+  const [group, setGroup] = useState<Group | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
@@ -48,7 +43,7 @@ const GroupPage: React.FC = () => {
               'Content-Type': 'application/json',
             },
           });
-          const fetchedGroup: GroupDetails = response.data.groups;
+          const fetchedGroup: Group = response.data.groups;
           setGroup(fetchedGroup);
           setLoading(false);
         } catch (err) {

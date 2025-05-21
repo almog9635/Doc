@@ -87,8 +87,9 @@ const TasksSection: React.FC<TasksSectionProps> = ({
   };
 
   // Find user name by ID for display purposes
-  const getUserNameById = (userId: string): string => {
-    const user = usersGroup.find(u => u.id === userId);
+  const getUserNameById = (userId: string | { id: string }): string => {
+    const actualUserId = typeof userId === 'string' ? userId : userId?.id;
+    const user = usersGroup.find(u => u.id === actualUserId);
     return user ? `${user.firstName} ${user.lastName}` : 'Unknown User';
   };
 
@@ -155,13 +156,18 @@ const TasksSection: React.FC<TasksSectionProps> = ({
             
             <div className={styles.editButtonGroup}>
               <button 
+                type="button"
                 onClick={handlers.handleUpdateTask} 
                 className={styles.updateButton}
                 disabled={!editTaskContent.trim() || !editTaskStartDate || !editTaskDeadline}
               >
                 Update Task
               </button>
-              <button onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
+              <button 
+                type="button"
+                onClick={handlers.handleCancelEdit} 
+                className={styles.cancelEditButton}
+              >
                 Cancel
               </button>
             </div>
@@ -229,6 +235,7 @@ const TasksSection: React.FC<TasksSectionProps> = ({
             </label>
             
             <button 
+              type="button"
               onClick={handlers.handleAddTask} 
               className={styles.addButton}
               disabled={!taskContent.trim() || !taskStartDate || !taskDeadline}
@@ -238,7 +245,11 @@ const TasksSection: React.FC<TasksSectionProps> = ({
             
             {error && (
               <div className={styles.retryContainer}>
-                <button onClick={fetchUsersGroup} className={styles.retryButton}>
+                <button 
+                  type="button"
+                  onClick={fetchUsersGroup} 
+                  className={styles.retryButton}
+                >
                   Retry Loading Users
                 </button>
               </div>
@@ -268,6 +279,7 @@ const TasksSection: React.FC<TasksSectionProps> = ({
                 </div>
                 <div className={styles.itemActions}>
                   <button 
+                    type="button"
                     onClick={() => handlers.handleEditTask(task.id)} 
                     className={styles.editButton}
                     disabled={!!editingTaskId}
@@ -275,6 +287,7 @@ const TasksSection: React.FC<TasksSectionProps> = ({
                     Edit
                   </button>
                   <button 
+                    type="button"
                     onClick={() => handlers.handleDeleteTask(task.id)} 
                     className={styles.deleteButton}
                   >

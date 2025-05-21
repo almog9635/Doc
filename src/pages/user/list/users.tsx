@@ -6,6 +6,7 @@ import { User } from '../../../entity/user.ts';
 import { jwtDecode } from 'jwt-decode';
 import { DecodedToken } from '../../../entity/decodedToken.ts';
 import UserNavBar from '../components/userNavBar/userNavBar.tsx';
+import { Rank, ServiceType } from '../../../consts';
 
 const Users: React.FC = () => {
     const navigate = useNavigate();
@@ -85,15 +86,39 @@ const Users: React.FC = () => {
                     <option value="firstName">First Name</option>
                     <option value="lastName">Last Name</option>
                     <option value="serviceType">Service Type</option>
-                    <option value="password">Password</option>
+                    <option value="rank">Rank</option> {/* Add Rank filter option */}
                 </select>
-                <input
-                    type="text"
-                    placeholder={`Filter by ${filterCategory}`}
-                    value={filters[filterCategory] || ''}
-                    onChange={(e) => handleFilterChange(filterCategory, e.target.value)}
-                    className={styles.filterInput}
-                />
+                {filterCategory === 'serviceType' ? (
+                    <select
+                        value={filters[filterCategory] || ''}
+                        onChange={(e) => handleFilterChange(filterCategory, e.target.value)}
+                        className={styles.filterInput} // Consider a specific style for select filter
+                    >
+                        <option value="">All Service Types</option>
+                        {Object.values(ServiceType).map(type => (
+                            <option key={type} value={type}>{type}</option>
+                        ))}
+                    </select>
+                ) : filterCategory === 'rank' ? (
+                     <select
+                        value={filters[filterCategory] || ''}
+                        onChange={(e) => handleFilterChange(filterCategory, e.target.value)}
+                        className={styles.filterInput} // Consider a specific style for select filter
+                    >
+                        <option value="">All Ranks</option>
+                        {Object.values(Rank).map(rank => (
+                            <option key={rank} value={rank}>{rank}</option>
+                        ))}
+                    </select>
+                ) : (
+                    <input
+                        type="text"
+                        placeholder={`Filter by ${filterCategory}`}
+                        value={filters[filterCategory] || ''}
+                        onChange={(e) => handleFilterChange(filterCategory, e.target.value)}
+                        className={styles.filterInput}
+                    />
+                )}
                 <button
                     onClick={() => handleFilterChange(filterCategory, '')}
                     className={styles.clearFilterButton}
@@ -108,8 +133,8 @@ const Users: React.FC = () => {
                             <h3 className={styles.userName}>{user.firstName} {user.lastName}</h3>
                             <div className={styles.userInfo}>
                                 <p className={styles.userId}>ID: {user.id}</p>
-                                <p className={styles.userType}>Type: {user.serviceType}</p>
-                                <p className={styles.userType}>Rank: {user.rank}</p>
+                                <p className={styles.userType}>Type: {user.serviceType}</p> {/* Display enum value */}
+                                <p className={styles.userType}>Rank: {user.rank}</p> {/* Display enum value */}
                             </div>
                         </div>
                         <div className={styles.userActions}>
@@ -120,7 +145,7 @@ const Users: React.FC = () => {
                                 View Details
                             </button>
                         <Link 
-                                to={`/editUser/${user.id}`} 
+                                to={`/user/update/${user.id}`} 
                                 className={styles.editButton}
                             >
                                 Edit User

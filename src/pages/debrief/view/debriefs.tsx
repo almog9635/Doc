@@ -5,18 +5,22 @@ import styles from './debriefs.module.css';
 import { Debrief } from '../../../entity/debrief/debrief';
 import { useAuthCheck } from '../../auth/hooks/Authentication';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import { DecodedToken } from '../../../entity/decodedToken';
 
 const Debriefs: React.FC = () => {
   const [debriefs, setDebriefs] = useState<Debrief[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [searchField, setSearchField] = useState<string>('all'); // State for selected search field
-  const { isAuthorized } = useAuthCheck();
-  const navigate = useNavigate();
+  const [searchField, setSearchField] = useState<string>('all');
+  const { isAuthorized } = useAuthCheck(['admin', 'leader', 'soldier']);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     if (isAuthorized) {
+      console.log('User is authorized, fetching debriefs...');
       fetchDebriefs();
     }
   }, [isAuthorized]);
@@ -30,12 +34,15 @@ const Debriefs: React.FC = () => {
         navigate('/login');
         return;
       }
+      const decodedToken = jwtDecode<DecodedToken>(token);
+      setIsAdmin(decodedToken.roles.includes("admin"));
       const response = await axios.get('http://localhost:4000/debriefs', {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
+      console.log(response.data.getAllDebriefs);
       setDebriefs(response.data.getAllDebriefs || []);
     } catch (err) {
       console.error('Error fetching debriefs:', err);
@@ -58,13 +65,15 @@ const Debriefs: React.FC = () => {
         case 'createdBy':
           return debrief.metaData?.createdBy?.toLowerCase().includes(lowerCaseSearchTerm);
         case 'labels':
-          return Array.isArray(debrief.labels) && debrief.labels.some(label => label.toLowerCase().includes(lowerCaseSearchTerm));
+          // Handle labels only as a string
+          return typeof debrief.labels === 'string' && 
+                 debrief.labels.toLowerCase().includes(lowerCaseSearchTerm);
         case 'all':
         default:
           return (
             debrief.title.toLowerCase().includes(lowerCaseSearchTerm) ||
             (debrief.metaData?.createdBy && debrief.metaData.createdBy.toLowerCase().includes(lowerCaseSearchTerm)) ||
-            (Array.isArray(debrief.labels) && debrief.labels.some(label => label.toLowerCase().includes(lowerCaseSearchTerm)))
+            (typeof debrief.labels === 'string' && debrief.labels.toLowerCase().includes(lowerCaseSearchTerm))
           );
       }
     });
@@ -121,12 +130,13 @@ const Debriefs: React.FC = () => {
                   <Link to={`/debrief/${debrief.id}`} className={styles.debriefLink}>
                     <div className={styles.debriefInfo}>
                       <span className={styles.debriefTitle}>{debrief.title}</span>
+                      <span className={styles.debriefId}>ID: {debrief.id}</span>
                       {debrief.metaData?.createdBy && (
                         <span className={styles.debriefCreator}>Created by: {debrief.metaData.createdBy}</span>
                       )}
-                      {Array.isArray(debrief.labels) && debrief.labels.length > 0 && (
+                      {debrief.labels.length > 0 && (
                         <div className={styles.debriefLabels}>
-                          Labels: {debrief.labels.join(', ')}
+                          Labels: {debrief.labels}
                         </div>
                       )}
                     </div>
@@ -136,9 +146,19 @@ const Debriefs: React.FC = () => {
               ))}
             </ul>
           )}
-          <Link to="/createDebrief" className={styles.createButton}>
-            Create New Debrief
-          </Link>
+          <div className={styles.actionButtonsContainer}>
+            <Link to="/createDebrief" className={styles.createButton}>
+              Create New Debrief
+            </Link>
+            {isAdmin && (
+              <button 
+                className={styles.deleteButton} 
+                onClick={() => navigate('/debrief/delete')}
+              >
+                Delete Debrief
+              </button>
+            )}
+          </div>
         </>
       )}
     </div>

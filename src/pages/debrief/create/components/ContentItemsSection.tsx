@@ -107,15 +107,15 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
             </label>
             {editingColumnId ? (
               <div className={styles.editButtonGroup}>
-                <button onClick={handlers.handleUpdateColumn} className={styles.updateButton}>
+                <button type="button" onClick={handlers.handleUpdateColumn} className={styles.updateButton}>
                   Update Column
                 </button>
-                <button onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
+                <button type="button" onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
                   Cancel
                 </button>
               </div>
             ) : (
-              <button onClick={handlers.handleAddColumn} className={styles.addButton}>
+              <button type="button" onClick={handlers.handleAddColumn} className={styles.addButton}>
                 Add Column
               </button>
             )}
@@ -128,6 +128,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                       <span>{index + 1}. {column.name}</span>
                       <div className={styles.itemActions}>
                         <button
+                          type="button"
                           onClick={() => handlers.handleEditColumn(column.id)}
                           className={styles.smallEditButton}
                           disabled={!!editingColumnId}
@@ -135,6 +136,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                           Edit
                         </button>
                         <button
+                          type="button"
                           onClick={() => handlers.handleDeleteColumn(column.id)}
                           className={styles.smallDeleteButton}
                           disabled={!!editingColumnId}
@@ -145,7 +147,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                     </li>
                   ))}
                 </ul>
-                <button onClick={handlers.handleAddRow} className={styles.addButton}>Add Row</button>
+                <button type="button" onClick={handlers.handleAddRow} className={styles.addButton}>Add Row</button>
                 {tableRows.length > 0 && (
                   <div className={styles.tablePreview}>
                     <h4>Table Preview</h4>
@@ -201,10 +203,10 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                     />
                   </label>
                   <div className={styles.editButtonGroup}>
-                    <button onClick={handlers.handleUpdateComment} className={styles.updateButton}>
+                    <button type="button" onClick={handlers.handleUpdateComment} className={styles.updateButton}>
                       Update Comment
                     </button>
-                    <button onClick={() => handlers.handleEditComment(null)} className={styles.cancelEditButton}>
+                    <button type="button" onClick={() => handlers.handleEditComment(null)} className={styles.cancelEditButton}>
                       Cancel
                     </button>
                   </div>
@@ -221,7 +223,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                       required
                     />
                   </label>
-                  <button onClick={handlers.handleAddComment} className={styles.addButton}>
+                  <button type="button" onClick={handlers.handleAddComment} className={styles.addButton}>
                     Add Comment
                   </button>
                 </>
@@ -236,6 +238,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                       <span>{index + 1}. {comment.bullet}</span>
                       <div className={styles.itemActions}>
                         <button
+                          type="button"
                           onClick={() => handlers.handleEditComment(comment.id)}
                           className={styles.smallEditButton}
                           disabled={!!editingCommentId}
@@ -243,6 +246,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                           Edit
                         </button>
                         <button
+                          type="button"
                           onClick={() => handlers.handleDeleteComment(comment.id)}
                           className={styles.smallDeleteButton}
                           disabled={!!editingCommentId}
@@ -260,15 +264,15 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
 
         {editMode ? (
           <div className={styles.editButtonGroup}>
-            <button onClick={handlers.handleUpdateContentItem} className={styles.updateButton}>
+            <button type="button" onClick={handlers.handleUpdateContentItem} className={styles.updateButton}>
               Update Content Item
             </button>
-            <button onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
+            <button type="button" onClick={handlers.handleCancelEdit} className={styles.cancelEditButton}>
               Cancel Edit
             </button>
           </div>
         ) : (
-          <button onClick={handlers.handleAddContentItem} className={styles.addButton}>
+          <button type="button" onClick={handlers.handleAddContentItem} className={styles.addButton}>
             Add Content Item
           </button>
         )}
@@ -289,6 +293,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                 </div>
                 <div className={styles.contentItemActions}>
                   <button
+                    type="button"
                     onClick={() => handlers.handleEditContentItem(item.id)}
                     className={styles.editButton}
                     disabled={editMode && editingContentItemId !== item.id}
@@ -296,6 +301,7 @@ const ContentItemsSection: React.FC<ContentItemsSectionProps> = ({
                     Edit
                   </button>
                   <button
+                    type="button"
                     onClick={() => handlers.handleDeleteContentItem(item.id)}
                     className={styles.deleteButton}
                     disabled={editMode}
